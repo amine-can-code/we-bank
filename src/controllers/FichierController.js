@@ -2,6 +2,13 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import xlsx from "xlsx";
+
+// 🔧 Ensure uploads folder exists (IMPORTANT for Render)
+const uploadsDir = "uploads";
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
 import {
   saveFileMetadata,
   getAllFichiers,
