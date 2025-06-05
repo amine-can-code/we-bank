@@ -5,6 +5,7 @@ import {
   readFichierById,
   deleteFichier,
   readFileContent,
+  analyzeFichierById,
 } from "../controllers/FichierController.js";
 
 const router = express.Router();
@@ -23,5 +24,8 @@ router.get("/:id", readFichierById);
 
 // ✅ Delete a fichier by ID
 router.delete("/:id", deleteFichier);
+
+// ✅ Analyze a fichier by ID
+router.get("/analyze/:id", analyzeFichierById);
 
 export default router;
