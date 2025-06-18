@@ -15,11 +15,13 @@ Chart.register(...registerables);
 // Register the plugin
 Chart.register(ChartDataLabels);
 
-const reportsDir = "generated-reports";
+const reportsDir =
+  process.env.NODE_ENV === "production"
+    ? "/tmp/generated-reports"
+    : path.join(process.cwd(), "generated-reports");
 
-// Ensure the directory exists
 if (!fs.existsSync(reportsDir)) {
-  fs.mkdirSync(reportsDir);
+  fs.mkdirSync(reportsDir, { recursive: true });
 }
 
 const generatePDF = async (
