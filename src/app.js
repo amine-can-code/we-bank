@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import fileRoutes from "./routes/Fichier.routes.js";
 import listeRoutes from "./routes/Liste.routes.js";
+import reportRoutes from "./routes/Report.routes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use("/uploads", express.static("uploads")); // serve uploaded files
 // Routes
 app.use("/api/files", fileRoutes);
 app.use("/api/listes", listeRoutes);
+app.use("/api/reports", reportRoutes);
 
 // Root Test Route
 app.get("/", (req, res) => {

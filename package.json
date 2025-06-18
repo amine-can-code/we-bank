@@ -12,13 +12,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "chartjs-node-canvas": "^5.0.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "cors": "^2.8.5",
+    "docx": "^9.5.0",
     "dotenv": "^16.5.0",
     "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "json2csv": "^6.0.0-alpha.2",
     "mongoose": "^8.15.0",
     "multer": "^2.0.0",
+    "pdfkit": "^0.17.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

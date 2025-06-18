@@ -223,7 +223,9 @@ export const analyzeFichierById = async (req, res) => {
     if (dataMatrix.length === 0)
       return res.json({ message: "Empty file", analysis: {} });
 
-    const headers = dataMatrix[0].map((h) => String(h).trim());
+    const headers = dataMatrix[0].map((h) =>
+      String(h).replace(/\s+/g, " ").trim().toLowerCase()
+    );
     const rows = dataMatrix.slice(1);
 
     // Convert to structured object array
@@ -233,7 +235,6 @@ export const analyzeFichierById = async (req, res) => {
 
     // Use helper to process stats
     const analysis = analyzeColumns(headers, records, fichier);
-
     return res.json({
       fileId: fichier._id,
       fileName: fichier.nomFichier,
@@ -250,6 +251,7 @@ export const analyzeFichierById = async (req, res) => {
 };
 
 // Helper function to analyze columns
+// Helper function to analyze columns - FIXED VERSION
 function analyzeColumns(headers, records, file) {
   const stats = {
     totalRows: records.length,
@@ -349,30 +351,39 @@ function analyzeColumns(headers, records, file) {
     }
   });
 
-  // Extra charts
-  const charts = {};
-  let category1, category2, category3;
+  // Extra charts - FIXED SECTION
+  const charts = Object.create(null);
+  let category1, category2, category3, category4;
 
-  // Determine chart keys based on file type
   if (file.typeFichier === "EVAC") {
-    category1 = "Etablissement";
-    category2 = "Emploi";
-    category3 = "Organisme de formation";
+    category1 = "etablissement";
+    category2 = "emploi";
+    category3 = "notation à chaud";
+    category4 = "type d'évaluation";
   } else if (file.typeFichier === "EVAF") {
-    category1 = "Service";
-    category2 = "Type de formation";
-    category3 = "Libellé du stage";
+    category1 = "service";
+    category2 = "type de formation";
+    category3 = "libellé du stage";
+    category4 = "nom du manager";
   }
 
-  [category1, category2, category3].forEach((key) => {
-    if (headers.includes(key)) {
+  // FIX: Use the processed headers array instead of dataMatrix[0]
+  [category1, category2, category3, category4].forEach((key) => {
+    if (!key) return; // Skip if key is undefined
+
+    // Find matching header from the already processed headers
+    const matchedKey = headers.find(
+      (h) => h.toLowerCase() === key.toLowerCase()
+    );
+
+    if (matchedKey) {
       const counts = {};
       records.forEach((r) => {
-        const value = r[key] || "Inconnu";
+        const value = r[matchedKey] || "Inconnu";
         counts[value] = (counts[value] || 0) + 1;
       });
 
-      charts[key] = Object.entries(counts).map(([label, value]) => ({
+      charts[matchedKey] = Object.entries(counts).map(([label, value]) => ({
         name: label,
         value,
       }));
@@ -380,7 +391,6 @@ function analyzeColumns(headers, records, file) {
   });
 
   stats.chartData = charts;
-
   return stats;
 }
 
